@@ -11,6 +11,7 @@ class Usuario extends Model
     use HasFactory;
     protected $table = 'usuario';
     protected $primaryKey = 'idusuario';
+    protected $guarded = [];
 
     public function contas()
     {
