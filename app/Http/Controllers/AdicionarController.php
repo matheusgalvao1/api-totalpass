@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Conta;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class Cripto{
     function encrypt($mensagem){
@@ -26,49 +27,43 @@ class Cripto{
 
 class AdicionarController extends Controller
 {
-    private function validateUserInputs($user, &$message){
-        if ((!preg_match("/^[a-zA-Z ]*$/", $user->nome) || $user->nome == '') || $user->nome == ' '){
-            $message = 'Nome inválido!';
-            return false;
-        }
-        if (!preg_match("/^[a-zA-Z]*$/", $user->sobrenome) || $user->sobrenome == ''){
-            $message = 'Sobrenome inválido!';
-            return false;
-        }
-        if ($user->senha == '' || $user->senha == ' '){
-            $message = 'Uma senha precisa ser informada!';
-            return false;
-        }
-    }
-
     public function addUser(Request $request){
         $user = new Usuario();
         $crypt = new Cripto();
-        $sucess = true;
-        $message = '';
-        $user->nome = $request->input('nome');
-        $user->sobrenome = $request->input('sobrenome');
-        $user->email = $request->input('email');
-        $user->senha = $request->input('senha');
-        //$sucess = $this->validateUserInputs($user, $message);
+        $validator = Validator::make($request->all(), [
+            'nome' => 'required|regex:/^[a-zA-Z ]*$/',
+            'sobrenome' => 'required|regex:/^[a-zA-Z ]*$/',
+            'email' => 'email|required|unique:App\Models\Usuario,email',
+            'senha' => 'required|min:6'
+        ],
+        [
+            'required' => 'O campo :attribute precisa ser informado!',
+            'regex' => 'O campo :attribute inserido não é valido!',
+            'email' => 'O email inserido não está no formato correto',
+            'unique' => 'O email inserido já está em uso!',
+            'min' => 'A senha precisa ter pelo menos 6 elementos!'
+        ]);
+        if ($validator->fails()){
+            return response()->json([
+                'sucess'=> false,
+                'erros' => $validator->errors()->all(),
+            ], 422); 
+        }
+        $user->nome = $crypt->encrypt($user->nome);
+        $user->sobrenome = $crypt->encrypt($user->sobrenome);
+        $user->email = $request->input("email");
+        $user->senha = password_hash($user->senha, PASSWORD_DEFAULT);
+        $sucess = $user->save();
         if ($sucess){
-            $user->nome = $crypt->encrypt($user->nome);
-            $user->sobrenome = $crypt->encrypt($user->sobrenome);
-            $user->email = $crypt->encrypt($user->email);
-            $user->senha = password_hash($user->senha, PASSWORD_DEFAULT);
-            $sucess = $user->save();
-            if ($sucess){
-                $message = 'Usuario criado com sucesso!';
-                return response()->json([
-                    'sucess'=> $sucess,
-                    'message' => $message
-                ], 200);
-            }else{
-                return response()->json([
-                    'sucess'=> $sucess,
-                    'message' => $message
-                ], 400);
-            }
+            return response()->json([
+                'sucess'=> $sucess,
+                'message' => 'Usuario criado com sucesso!'
+            ], 200);
+        }else{
+            return response()->json([
+                'sucess'=> $sucess,
+                'message' => 'Falha ao criar usuário'
+            ], 400);
         }
     }
 
