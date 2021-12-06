@@ -93,7 +93,7 @@ class AdicionarController extends Controller
             return response()->json([
                 'sucess'=> false,
                 'message' => 'Usuário não autorizado',
-            ], 403);
+            ], 401);
         }
         $conta->nome = $request->input("nome");
         $conta->login = $request->input("login");
