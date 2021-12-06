@@ -55,9 +55,11 @@ class AdicionarController extends Controller
         $user->senha = password_hash($user->senha, PASSWORD_DEFAULT);
         $sucess = $user->save();
         if ($sucess){
+            $token = $user->createToken("acessToken");
             return response()->json([
                 'sucess'=> $sucess,
-                'message' => 'Usuario criado com sucesso!'
+                'message' => 'Usuario criado com sucesso! ',
+                'token' => $token->plainTextToken
             ], 200);
         }else{
             return response()->json([
