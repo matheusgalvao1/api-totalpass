@@ -68,13 +68,47 @@ class AdicionarController extends Controller
     }
 
     public function addAccount(Request $request){
-        $usertoken = $request->header("userToken");
         $conta = new Conta();
-        $nome = $request->input("nome");
-        $login = $request->input("login");
-        $senha = $request->input("senha");
-
-
+        $validator = Validator::make($request->all(), [
+            'nome' => 'required|regex:/^[a-zA-Z ]*$/',
+            'login' => 'required',
+            'senha' => 'required|min:6'
+        ],
+        [
+            'required' => 'O campo :attribute precisa ser informado!',
+            'regex' => 'O campo :attribute inserido não é valido!',
+            'min' => 'A senha precisa ter pelo menos 6 elementos!'
+        ]);
+        if ($validator->fails()){
+            return response()->json([
+                'sucess'=> false,
+                'erros' => $validator->errors()->all(),
+            ], 422); 
+        }
+        $userToken = $request->header("userToken");
+        $retorno = Usuario::where("token", $userToken)->get("idusuario");
+        if(empty($retorno[0])){
+            return response()->json([
+                'sucess'=> false,
+                'message' => 'Usuário não autorizado',
+            ], 403);
+        }
+        $conta->nome = $request->input("nome");
+        $conta->login = $request->input("login");
+        $conta->senha = $request->input("senha");
+        $conta->idusuario = $retorno[0]["idusuario"];
+        $sucess = $conta->save();
+        if($sucess){
+            return response()->json([
+                'sucess'=> true,
+                'message' => 'Conta adicionada',
+            ], 200);
+        }else{
+            return response()->json([
+                'sucess'=> false,
+                'message' => 'Falha!',
+            ], 403);
+        }
     }
 
 }
