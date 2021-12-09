@@ -26,8 +26,10 @@ class Cripto{
 
 class EditarController extends Controller
 {
-    public function editUser(Request $request, String $id){
-        $user = Usuario::find($id);
+    public function editUser(Request $request){
+        $userToken = $request->header("userToken");
+        $retorno = Usuario::where("token", $userToken)->first("idusuario");
+        $user = Usuario::find($retorno['idusuario']);
         $crypt = new Cripto();
         $validator = Validator::make($request->all(), [
             'nome' => 'required|regex:/^[a-zA-Z ]*$/',
