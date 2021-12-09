@@ -56,7 +56,7 @@ class AdicionarController extends Controller
                 errors:$validator->errors()->all(), code:422);; 
         }
         $userId = $request->user()->idusuario;
-        $conta->nome = $crypt->encrypt($request->input("nome"));
+        $conta->nome = $request->input("nome");
         $conta->login = $crypt->encrypt($request->input("login"));
         $conta->senha = $crypt->encrypt($request->input("senha"));
         $conta->idusuario = $userId;

@@ -3,7 +3,7 @@
 use App\Http\Controllers\AdicionarController;
 use App\Http\Controllers\EditarController;
 use App\Http\Controllers\ListarController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::post("/addUser", [AdicionarController::class, 'addUser']); //Adiciona novo usuário
 Route::post("/addAccount", [AdicionarController::class, 'addAccount'])->middleware('auth:sanctum'); //Adiciona nova conta a um usuário
+Route::post("/login", [LoginController::class, 'login']); //Realiza login, recebe token
+Route::post("/logout", [LoginController::class, 'logout'])->middleware('auth:sanctum'); //Exclue tokens do usuário especifico do banco
 Route::post("/editAccount/{id}", [EditarController::class, 'editAccount'])->middleware('auth:sanctum'); //Edita uma conta a partir de um id
 Route::post("/editUser", [EditarController::class, 'editUser'])->middleware('auth:sanctum');//Edita um usuário a partir do token
 Route::get("/getAccounts", [ListarController::class, 'getAllAccounts'])->middleware('auth:sanctum'); //Retorna contas de um dado usuário
