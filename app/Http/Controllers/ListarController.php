@@ -14,9 +14,8 @@ class ListarController extends Controller
         $userToken = $request->header("userToken");
         $retorno = Usuario::where("token", $userToken)->first("idusuario");
         return DB::table('conta')
-        ->where("idusuario", $retorno["idusuario"])
-        ->get();
-
+            ->where("idusuario", $retorno["idusuario"])
+            ->get();
     }
 
     public function getAccountByName(Request $request, $nome)
@@ -24,9 +23,9 @@ class ListarController extends Controller
         $userToken = $request->header("userToken");
         $retorno = Usuario::where("token", $userToken)->first("idusuario");
         return DB::table('conta')
-        ->where("idusuario", $retorno["idusuario"])
-        ->where("nome", "like", '%'.$nome.'%')
-        ->get();
+            ->where("idusuario", $retorno["idusuario"])
+            ->where("nome", "like", '%' . $nome . '%')
+            ->get();
     }
 
     public function getAccountsRanking()
@@ -40,5 +39,10 @@ class ListarController extends Controller
 
     public function getAccountOccurrences($nome)
     {
+        return DB::table('conta')
+            ->where('nome', $nome)
+            ->selectRaw('nome, COUNT(*) as ocorrencias')
+            ->groupBy('nome')
+            ->get();
     }
 }
