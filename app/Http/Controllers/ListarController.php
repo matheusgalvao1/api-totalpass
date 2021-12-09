@@ -11,19 +11,17 @@ class ListarController extends Controller
 {
     public function getAllAccounts(Request $request)
     {
-        $userToken = $request->header("userToken");
-        $retorno = Usuario::where("token", $userToken)->first("idusuario");
+        $userId = $request->user()->idusuario;
         return DB::table('conta')
-            ->where("idusuario", $retorno["idusuario"])
+            ->where("idusuario", $userId)
             ->get();
     }
 
     public function getAccountByName(Request $request, $nome)
     {
-        $userToken = $request->header("userToken");
-        $retorno = Usuario::where("token", $userToken)->first("idusuario");
+        $userId = $request->user()->idusuario;
         return DB::table('conta')
-            ->where("idusuario", $retorno["idusuario"])
+            ->where("idusuario", $userId)
             ->where("nome", "like", '%' . $nome . '%')
             ->get();
     }

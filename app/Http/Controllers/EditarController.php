@@ -1,35 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Helpers\JsonResponse;
+use App\Helpers\ValidatorMessages;
 use App\Models\Conta;
-use App\Models\Usuario;
+use Cripto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
-class Cripto{
-    function encrypt($mensagem){
-        $chave = "16428adnsadk123";
-        $iv = "wNYtCnelXfOa6uiJ";
-        $resultado = openssl_encrypt($mensagem, "AES-256-CBC", $chave, OPENSSL_RAW_DATA, $iv);
-        $resultado = base64_encode($resultado);
-        return $resultado;
-    }
-
-    function decrypt($mensagem){
-        $chave = "16428adnsadk123";
-        $iv = "wNYtCnelXfOa6uiJ";
-        $resultado = base64_decode($mensagem);
-        $resultado = openssl_decrypt($resultado, "AES-256-CBC", $chave, OPENSSL_RAW_DATA, $iv);
-        return $resultado;
-    }
-}
 
 class EditarController extends Controller
 {
     public function editUser(Request $request){
-        $userToken = $request->header("userToken");
-        $retorno = Usuario::where("token", $userToken)->first("idusuario");
-        $user = Usuario::find($retorno['idusuario']);
+        $user = $request->user();
         $crypt = new Cripto();
         $validator = Validator::make($request->all(), [
             'nome' => 'required|regex:/^[a-zA-Z ]*$/',
@@ -37,18 +20,11 @@ class EditarController extends Controller
             'email' => 'email|required|unique:App\Models\Usuario,email',
             'senha' => 'required|min:6'
         ],
-        [
-            'required' => 'O campo :attribute precisa ser informado!',
-            'regex' => 'O campo :attribute inserido não é valido!',
-            'email' => 'O email inserido não está no formato correto',
-            'unique' => 'O email inserido já está em uso!',
-            'min' => 'A senha precisa ter pelo menos 6 elementos!'
-        ]);
+        ValidatorMessages::messages()
+        );
         if ($validator->fails()){
-            return response()->json([
-                'sucess'=> false,
-                'erros' => $validator->errors()->all(),
-            ], 422); 
+            return JsonResponse::jsonResponse(type:"error", sucess:false, message:"Inputs inválidos", 
+                errors:$validator->errors()->all(), code:422);; 
         }
         $user->nome = $crypt->encrypt($user->nome);
         $user->sobrenome = $crypt->encrypt($user->sobrenome);
@@ -56,15 +32,9 @@ class EditarController extends Controller
         $user->senha = password_hash($user->senha, PASSWORD_DEFAULT);
         $sucess = $user->save();
         if ($sucess){
-            return response()->json([
-                'sucess'=> $sucess,
-                'message' => 'Usuario editado com sucesso! ',
-            ], 200);
+            return JsonResponse::jsonResponse(type:"default", sucess:true, message:"Usuario editado com sucesso!", code:200);
         }else{
-            return response()->json([
-                'sucess'=> $sucess,
-                'message' => 'Falha ao criar usuário'
-            ], 400);
+            return JsonResponse::jsonResponse(type:"default", sucess:false, message:"Falha ao editar usuário", code:400);
         }
     }
 
@@ -74,37 +44,23 @@ class EditarController extends Controller
             'login' => 'required',
             'senha' => 'required|min:6'
         ],
-        [
-            'required' => 'O campo :attribute precisa ser informado!',
-            'min' => 'A senha precisa ter pelo menos 6 elementos!'
-        ]);
+        ValidatorMessages::messages()
+        );
         if ($validator->fails()){
-            return response()->json([
-                'sucess'=> false,
-                'erros' => $validator->errors()->all(),
-            ], 422); 
+            return JsonResponse::jsonResponse(type:"error", sucess:false, message:"Inputs inválidos", 
+                errors:$validator->errors()->all(), code:422);
         }
-        $userToken = $request->header("userToken");
-        $retorno = Usuario::where("token", $userToken)->get("idusuario");
-        if(empty($retorno[0])){
-            return response()->json([
-                'sucess'=> false,
-                'message' => 'Usuário não autorizado',
-            ], 401);
+        $userId = $request->user()->idusuario;
+        if($userId != $conta->idusuario){
+            return JsonResponse::jsonResponse(type:"default", sucess:false, message:"Usuario nao autorizado", code:401);
         }
         $conta->login = $request->input("login");
         $conta->senha = $request->input("senha");
         $sucess = $conta->save();
         if($sucess){
-            return response()->json([
-                'sucess'=> true,
-                'message' => 'Conta editada',
-            ], 200);
+            return JsonResponse::jsonResponse(type:"default", sucess:true, message:"Conta editada com sucesso!", code:200);
         }else{
-            return response()->json([
-                'sucess'=> false,
-                'message' => 'Falha!',
-            ], 403);
+            return JsonResponse::jsonResponse(type:"default", sucess:false, message:"Falha ao editar conta", code:400);
         }
     }
 }
