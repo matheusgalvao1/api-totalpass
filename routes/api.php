@@ -21,7 +21,7 @@ Route::post("/addUser", [AdicionarController::class, 'addUser']); //Adiciona nov
 Route::post("/addAccount", [AdicionarController::class, 'addAccount'])->middleware('auth:sanctum'); //Adiciona nova conta a um usuário
 Route::post("/editAccount/{id}", [EditarController::class, 'editAccount'])->middleware('auth:sanctum'); //Edita uma conta a partir de um id
 Route::post("/editUser/{id}", [EditarController::class, 'editUser'])->middleware('auth:sanctum');//Edita um usuário a partir do token
-Route::get("/getAccounts", [ListarController::class, 'getAllAccounts']); //Retorna contas de um dado usuário
-Route::get("/getAccountByName/{nome}", [ListarController::class, 'getAccountByName']); //Retorna uma conta específica do usuário
+Route::get("/getAccounts", [ListarController::class, 'getAllAccounts'])->middleware('auth:sanctum'); //Retorna contas de um dado usuário
+Route::get("/getAccountByName/{nome}", [ListarController::class, 'getAccountByName'])->middleware('auth:sanctum'); //Retorna uma conta específica do usuário
 Route::get("/getAccountsRanking", [ListarController::class, 'getAccountsRanking'])->middleware('auth:sanctum'); //Retorna uma lista de nomes de contas no banco e quantos usuários as possuem
 Route::get("/getAccountOcurrences/{nome}", [ListarController::class, 'getAccountOccurrences']); //Retorna o número de ocorrências de uma dada conta na plataforma
