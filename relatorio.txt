@@ -3,7 +3,9 @@ Nesta terceira parte do trabalho foi desenvolvida uma API em laravel para comuni
 
 Atividades realizadas pelos membros:
 Mairon Lucas Slusarz: 
- 
+    - Rotas de criação de conta e usuário e rota de ranking de nomes de contas;
+    - Autenticação através do token Sanctum;
+    - Funções auxiliares de geração de resposta JSON, validações e criptografia;
 
 Matheus Rigoni Galvão: 
     - Adaptação do banco de dados para ser utilizado pela API
