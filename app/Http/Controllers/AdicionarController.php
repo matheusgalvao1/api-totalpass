@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Cripto;
 use App\Helpers\JsonResponse;
 use App\Helpers\ValidatorMessages;
 use App\Models\Conta;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Cripto;
 
 class AdicionarController extends Controller
 {
