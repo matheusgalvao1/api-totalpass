@@ -22,8 +22,8 @@ class LoginController extends Controller
                 errors:$validator->errors()->all(), code:422);
         }
         $user = Usuario::where('email', $request->input('email'))->get();
-        if (empty($user)){
-            return JsonResponse::jsonResponse(type:"error", sucess:false, message:"Email ou senha inválidos!", 
+        if (empty($user[0])){
+            return JsonResponse::jsonResponse(type:"default", sucess:false, message:"Email ou senha inválidos!", 
                 errors:$validator->errors()->all(), code:422);
         }
         $user = $user[0];
@@ -32,7 +32,7 @@ class LoginController extends Controller
             return JsonResponse::jsonResponse(type:"token", sucess:true, message:"Login realizado com sucesso!", 
                 token:$token->plainTextToken, code:200);
         } else{
-            return JsonResponse::jsonResponse(type:"error", sucess:false, message:"Email ou senha inválidos!", 
+            return JsonResponse::jsonResponse(type:"default", sucess:false, message:"Email ou senha inválidos!", 
                 errors:$validator->errors()->all(), code:422);
         }
     }
