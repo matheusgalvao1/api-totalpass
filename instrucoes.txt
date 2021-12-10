@@ -1,0 +1,9 @@
+Instruções de uso da API
+
+1- Mudar configuracoes do banco no arquivo ".env" com base no arquivo ".env example"
+2- Criar banco usando o script.sql que se encontra na pasta raiz do projeto
+3- Utilizar comando "composer install"
+4- Utilizar comando "php artisan migrate"
+5- Utilizar comando "php artisan serve"
+6- Importar no Insomnia o arquivo "rotasDeConsulta" para testes, o qual se encontra na raiz do projeto
+7- 
