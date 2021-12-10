@@ -1,0 +1,10 @@
+Integrantes: Mairon Lucas Slusarz (2163330) e Matheus Rigoni Galvão (2163357)
+Nesta terceira parte do trabalho foi desenvolvida uma API em laravel para comunicação e gerenciamento do banco de dados do totalpass
+
+Atividades realizadas pelos membros:
+Mairon Lucas Slusarz: 
+ 
+
+Matheus Rigoni Galvão: 
+    - Adaptação do banco de dados para ser utilizado pela API
+    - Rotas de edição e exclusão de usuário e conta, rotas de get para todas as contas, por nome e ocorrências
