@@ -21,8 +21,8 @@ Route::post("/addUser", [AdicionarController::class, 'addUser']); //Adiciona nov
 Route::post("/addAccount", [AdicionarController::class, 'addAccount'])->middleware('auth:sanctum'); //Adiciona nova conta a um usuário
 Route::post("/login", [LoginController::class, 'login']); //Realiza login, recebe token
 Route::post("/logout", [LoginController::class, 'logout'])->middleware('auth:sanctum'); //Exclue tokens do usuário especifico do banco
-Route::post("/editAccount/{id}", [EditarController::class, 'editAccount'])->middleware('auth:sanctum'); //Edita uma conta a partir de um id
-Route::post("/editUser", [EditarController::class, 'editUser'])->middleware('auth:sanctum');//Edita um usuário a partir do token
+Route::put("/editAccount/{id}", [EditarController::class, 'editAccount'])->middleware('auth:sanctum'); //Edita uma conta a partir de um id
+Route::put("/editUser", [EditarController::class, 'editUser'])->middleware('auth:sanctum');//Edita um usuário a partir do token
 Route::get("/getAccounts", [ListarController::class, 'getAllAccounts'])->middleware('auth:sanctum'); //Retorna contas de um dado usuário
 Route::get("/getAccountByName/{nome}", [ListarController::class, 'getAccountByName'])->middleware('auth:sanctum'); //Retorna uma conta específica do usuário
 Route::get("/getAccountsRanking", [ListarController::class, 'getAccountsRanking']); //Retorna uma lista de nomes de contas no banco e quantos usuários as possuem

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Cripto;
 use App\Helpers\JsonResponse;
 use App\Helpers\ValidatorMessages;
 use App\Models\Conta;
-use Cripto;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
