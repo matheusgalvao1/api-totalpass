@@ -16,6 +16,13 @@ class Usuario extends Model
     protected $primaryKey = 'idusuario';
     protected $guarded = [];
 
+    protected $hidden = [
+        'senha',
+        'created_at',
+        'updated_at',
+        'token',
+    ];
+
     public function contas()
     {
         return $this->hasMany(Conta::class, 'idusuario', 'idusuario');

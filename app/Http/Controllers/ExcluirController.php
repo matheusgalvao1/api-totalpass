@@ -10,6 +10,7 @@ class ExcluirController extends Controller
 {
     public function deleteUser(Request $request){
         $user = $request->user();
+        $user->tokens()->delete();
         $success = $user->delete();
         if($success){
             return JsonResponse::jsonResponse(type:"default", sucess:true, message:"Usuario excluida com sucesso!", code:200);

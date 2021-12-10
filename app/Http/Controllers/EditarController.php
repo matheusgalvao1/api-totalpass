@@ -9,6 +9,7 @@ use App\Models\Conta;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class EditarController extends Controller
 {
@@ -18,7 +19,11 @@ class EditarController extends Controller
         $validator = Validator::make($request->all(), [
             'nome' => 'required|regex:/^[a-zA-Z ]*$/',
             'sobrenome' => 'required|regex:/^[a-zA-Z ]*$/',
-            'email' => 'email|required|unique:App\Models\Usuario,email',
+            'email' => [
+                'email',
+                'required',
+                Rule::unique('usuario', 'email')->ignore($user)
+            ],
             'senha' => 'required|min:6'
         ],
         ValidatorMessages::messages()

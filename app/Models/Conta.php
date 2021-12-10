@@ -11,6 +11,16 @@ class Conta extends Model
     use HasFactory;
     protected $table = 'conta';
     protected $primaryKey = 'idconta';
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'idusuario',
+        'created_at',
+        'updated_at',
+    ];
 
     public function usuario()
     {

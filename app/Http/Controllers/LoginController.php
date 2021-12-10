@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Cripto;
 use App\Helpers\JsonResponse;
 use App\Helpers\ValidatorMessages;
 use App\Models\Usuario;
@@ -28,9 +29,12 @@ class LoginController extends Controller
         }
         $user = $user[0];
         if (password_verify($request->input("senha"), $user->senha)){
+            $crypt = new Cripto();
             $token = $user->createToken("acessToken");
-            return JsonResponse::jsonResponse(type:"token", sucess:true, message:"Login realizado com sucesso!", 
-                token:$token->plainTextToken, code:200);
+            $user->nome = $crypt->decrypt($user->nome);
+            $user->sobrenome = $crypt->decrypt($user->sobrenome);
+            return JsonResponse::jsonResponse(type:"login", sucess:true, message:"Login realizado com sucesso!", 
+                token:$token->plainTextToken, user:$user, code:200);
         } else{
             return JsonResponse::jsonResponse(type:"default", sucess:false, message:"Email ou senha inválidos!", 
                 errors:$validator->errors()->all(), code:422);
