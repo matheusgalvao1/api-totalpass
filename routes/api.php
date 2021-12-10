@@ -29,3 +29,4 @@ Route::get("/getAccountByName/{nome}", [ListarController::class, 'getAccountByNa
 Route::get("/getAccountsRanking", [ListarController::class, 'getAccountsRanking']); //Retorna uma lista de nomes de contas no banco e quantos usuários as possuem
 Route::get("/getAccountOccurrences/{nome}", [ListarController::class, 'getAccountOccurrences']); //Retorna o número de ocorrências de uma dada conta na plataforma
 Route::delete("/deleteAccount/{id}", [ExcluirController::class, 'deleteAccount'])->middleware('auth:sanctum'); // Excluir uma conta
+Route::delete("/deleteUser", [ExcluirController::class, 'deleteUser'])->middleware('auth:sanctum'); // Excluir um usuario

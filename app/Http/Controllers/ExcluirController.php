@@ -9,6 +9,13 @@ use Illuminate\Http\Request;
 class ExcluirController extends Controller
 {
     public function deleteUser(Request $request){
+        $user = $request->user();
+        $success = $user->delete();
+        if($success){
+            return JsonResponse::jsonResponse(type:"default", sucess:true, message:"Usuario excluida com sucesso!", code:200);
+        }else{
+            return JsonResponse::jsonResponse(type:"default", sucess:false, message:"Falha ao excluir usuario", code:400);
+        }
     }
 
     public function deleteAccount(Request $request, $id){
